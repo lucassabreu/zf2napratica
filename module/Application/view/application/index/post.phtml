@@ -1,0 +1,27 @@
+<h3 class="divisor btn-toolbar">
+    <span><?php echo $this->escapeHtml($post['title']); ?></span>
+    <div class="btn-group clearfix right">
+        <a href="/admin/index/save/id/<?php echo $post['id']; ?>" title="Editar" class="btn btn-info"><i class="icon-edit icon-white"></i></a>
+        <a href="/admin/index/delete/id/<?php echo $post['id']; ?>" rel="confirmation" title="Deseja excluir este registro?" class="btn btn-danger"><i class="icon-remove icon-white"></i></a>
+    </div><br />
+    <small class=" divisor"><?php echo $this->dateFormat(new DateTime($post['post_date']), \IntlDateFormatter::LONG, \IntlDateFormatter::SHORT, 'pt_BR'); ?></small>
+</h3>
+
+<p><?php echo $this->escapeHtml($post['description']); ?></p>
+<div id="comments" class="divider">
+    <?php if (count($comments) == 0): ?>
+        <hr />
+        <p class="text-info">Nenhum comentário foi adicionado.</p>
+    <?php else: ?>
+        <?php foreach ($comments as $comment): ?>
+            <hr />
+            <div claas="comment" meta-comment-id="<?php echo $comment['id']; ?>">
+                <h6>
+                    <a href="<?php echo $this->escapeHtml($comment['webpage']); ?>"><?php echo $this->escapeHtml($comment['name']); ?></a>
+                    <small><a href="mailto:<?php echo $this->escapeHtml($comment['email']); ?>">(<?php echo $this->escapeHtml($comment['email']); ?>)</a> - <?php echo $this->dateFormat(new DateTime($comment['comment_date']), \IntlDateFormatter::SHORT, \IntlDateFormatter::SHORT, 'pt_BR'); ?></small>
+                </h6>
+                <blockquote><?php echo $comment['description']; ?></blockquote>
+            </div>
+        <?php endforeach; ?>
+    <?php endif; ?>
+</div>
