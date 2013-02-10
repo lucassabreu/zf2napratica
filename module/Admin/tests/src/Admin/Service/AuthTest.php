@@ -125,6 +125,79 @@ class AuthTest extends ServiceTestCase {
         $this->assertNull($savedUser);
     }
 
+//    /**
+//     * Teste da autorização
+//     * @return void
+//     */
+//    public function testAuthorize() {
+//        $authService = $this->getService('Admin\Service\Auth');
+//
+//        $result = $authService->authorize();
+//        $this->assertFalse($result);
+//
+//        $user = $this->addUser();
+//
+//        $result = $authService->authenticate(
+//                array('username' => $user->username, 'password' => 'apple')
+//        );
+//        $this->assertTrue($result);
+//
+//        $result = $authService->authorize();
+//        $this->assertTrue($result);
+//    }
+
+    public function testAuthorize() {
+        $authService = $this->getService('Admin\Service\Auth');
+
+        $admin = $this->addUser();
+
+        //adiciona visitante
+        $visitante = new User();
+        $visitante->username = 'bill';
+        $visitante->password = md5('ms');
+        $visitante->name = 'Bill Gates';
+        $visitante->valid = 1;
+        $visitante->role = 'visitante';
+
+        $saved = $this->getTable('Admin\Model\User')->save($visitante);
+
+        //cria novas configurações de acl
+        $config = $this->serviceManager->get('Config');
+        $config['acl']['roles']['visitante'] = null;
+        $config['acl']['roles']['admin'] = 'visitante';
+
+        $config['acl']['resources'] = array(
+            'Application\Controller\Index.index',
+            'Admin\Controller\Index.save'
+        );
+
+        $config['acl']['privilege']['visitante']['allow'] = array('Application\Controller\Index.index');
+        $config['acl']['privilege']['admin']['allow'] = array('Admin\Controller\Index.save');
+
+        //atualiza a configuração
+        $this->serviceManager->setService('Config', $config);
+
+        //authentica com o visitante
+        $result = $authService->authenticate(
+                array('username' => $visitante->username, 'password' => 'ms')
+        );
+
+        $result = $authService->authorize('application', 'Application\Controller\Index', 'index');
+        $this->assertTrue($result);
+        $result = $authService->authorize('admin', 'Admin\Controller\Index', 'save');
+        $this->assertFalse($result);
+
+        //authentica com o admin
+        $result = $authService->authenticate(
+                array('username' => $admin->username, 'password' => 'apple')
+        );
+
+        $result = $authService->authorize('application', 'Application\Controller\Index', 'index');
+        $this->assertTrue($result);
+        $result = $authService->authorize('admin', 'Admin\Controller\Index', 'save');
+        $this->assertTrue($result);
+    }
+
     private function addUser() {
         $user = new User();
         $user->username = 'steve';

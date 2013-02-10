@@ -82,4 +82,28 @@ class Auth extends Service {
         return true;
     }
 
+    /**
+     * Faz a autorização do usuário para acessar o recurso
+     * @param string $moduleName Nome do módulo sendo acessado
+     * @param string $controllerName Nome do controller
+     * @param string $actionName Nome da ação
+     * @return boolean
+     */
+    public function authorize($moduleName, $controllerName, $actionName) {
+        $auth = new AuthenticationService();
+        $role = 'visitante';
+        if ($auth->hasIdentity()) {
+            $session = $this->getServiceManager()->get('Session');
+            $user = $session->offsetGet('user');
+            $role = $user->role;
+        }
+
+        $resource = $controllerName . '.' . $actionName;
+        $acl = $this->getServiceManager()->get('Core\Acl\Builder')->build();
+        if ($acl->isAllowed($role, $resource)) {
+            return true;
+        }
+        return false;
+    }
+
 }
