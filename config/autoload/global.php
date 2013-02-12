@@ -33,6 +33,7 @@ return array(
         'resources' => array(
             'Application\Controller\Index.index',
             'Application\Controller\Index.post',
+            'Application\Controller\Index.comments',
             'Admin\Controller\Index.save',
             'Admin\Controller\Index.delete',
             'Admin\Controller\Auth.index',
@@ -44,6 +45,7 @@ return array(
                 'allow' => array(
                     'Application\Controller\Index.index',
                     'Application\Controller\Index.post',
+                    'Application\Controller\Index.comments',
                     'Admin\Controller\Auth.index',
                     'Admin\Controller\Auth.login',
                     'Admin\Controller\Auth.logout',

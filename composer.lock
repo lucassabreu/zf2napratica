@@ -1,5 +1,5 @@
 {
-    "hash": "47e468f301e77d34cf3aef428145711a",
+    "hash": "67de7c79c94161c5c258f2df0855e20a",
     "packages": [
         {
             "name": "zendframework/zendframework",
@@ -108,6 +108,50 @@
                 "framework",
                 "zf2"
             ]
+        },
+        {
+            "name": "zendframework/zftool",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/zendframework/ZFTool.git",
+                "reference": "e0a06dbcfbe1cfdb52fe8ab5c5ca3db352c48199"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/zendframework/ZFTool/zipball/e0a06dbcfbe1cfdb52fe8ab5c5ca3db352c48199",
+                "reference": "e0a06dbcfbe1cfdb52fe8ab5c5ca3db352c48199",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.3",
+                "zendframework/zend-code": ">=2.0.0",
+                "zendframework/zend-config": ">=2.0.0",
+                "zendframework/zend-console": ">=2.0.0",
+                "zendframework/zend-file": ">=2.0.0",
+                "zendframework/zend-loader": ">=2.0.0",
+                "zendframework/zend-modulemanager": ">=2.0.0",
+                "zendframework/zend-mvc": ">=2.0.0",
+                "zendframework/zend-servicemanager": ">=2.0.0",
+                "zendframework/zend-stdlib": ">=2.0.0",
+                "zendframework/zend-text": ">=2.0.0",
+                "zendframework/zend-version": ">=2.0.0",
+                "zendframework/zend-view": ">=2.0.0"
+            },
+            "time": "2013-02-06 16:12:01",
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "ZFTool\\": "src/"
+                }
+            },
+            "notification-url": "http://packagist.org/downloads/",
+            "description": "Utility module for Zend Framework 2 applications.",
+            "homepage": "http://framework.zend.com/",
+            "keywords": [
+                "tool",
+                "zf2"
+            ]
         }
     ],
     "packages-dev": null,
@@ -115,7 +159,7 @@
 
     ],
     "minimum-stability": "stable",
-    "stability-flags": [
-
-    ]
+    "stability-flags": {
+        "zendframework/zftool": 20
+    }
 }

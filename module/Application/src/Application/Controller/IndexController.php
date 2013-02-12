@@ -53,4 +53,31 @@ class IndexController extends ActionController {
                 ));
     }
 
+    /**
+     * Retorna os comentários de um post
+     * @return Zend\Http\Response 
+     */
+    public function commentsAction() {
+        $id = (int) $this->params()->fromRoute('id', 0);
+
+        if ($id == 0) {
+            throw new \Exception('Código necesário');
+        }
+
+        $where = array('post_id' => $id);
+        $comments = $this->getTable('Application\Model\Comment')
+                ->fetchAll(null, $where)
+                ->toArray();
+
+        /*$response = $this->getResponse();
+        $response->setStatusCode(200);
+        $response->setContent(json_encode($comments));
+        $response->getHeaders()->addHeaderLine('Content-Type', 'application/json');
+        return $response;*/
+        
+        $view = new \Zend\View\Model\JsonModel($comments);
+        
+        return $view;
+    }
+
 }
