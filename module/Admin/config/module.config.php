@@ -61,6 +61,21 @@ return array(
                 $dbAdapter = $sm->get('DbAdapter');
                 return new Admin\Service\Auth($dbAdapter);
             },
-        )
+            'Cache' => function($sm) {
+                //$config = include __DIR__ . '/../../../config/application.config.php';
+                $config = $sm->get('Config');
+                $cache = \Zend\Cache\StorageFactory::factory(
+                                array(
+                                    'adapter' => $config['cache']['adapter'],
+                                    'plugins' => array(
+                                        'exception_handler' => array('throw_exceptions' => false),
+                                        'Serializer'
+                                    ),
+                                )
+                );
+
+                return $cache;
+            },
+        ),
     ),
 );
