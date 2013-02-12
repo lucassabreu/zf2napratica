@@ -8,6 +8,12 @@
  * @license   http://framework.zend.com/license/new-bsd New BSD License
  */
 return array(
+    'doctrine' => array(
+        'driver' => array(
+            'cache' => 'Doctrine\Common\Cache\ArrayCache',
+            'paths' => array(__DIR__ . '/../src/' . __NAMESPACE__ . '/Model')
+        ),
+    ),
     'router' => array(
         'routes' => array(
             'home' => array(

@@ -1,11 +1,14 @@
 <?php
 
+namespace Admin;
+
 // module/Admin/conﬁg/module.config.php:
 return array(
     'controllers' => array(//add module controllers
         'invokables' => array(
             'Admin\Controller\Index' => 'Admin\Controller\IndexController',
             'Admin\Controller\Auth' => 'Admin\Controller\AuthController',
+            'Admin\Controller\User' => 'Admin\Controller\UserController',
         ),
     ),
     'router' => array(
@@ -55,11 +58,11 @@ return array(
     'service_manager' => array(
         'factories' => array(
             'Session' => function($sm) {
-                return new Zend\Session\Container('ZF2napratica');
+                return new \Zend\Session\Container('ZF2napratica');
             },
             'Admin\Service\Auth' => function($sm) {
                 $dbAdapter = $sm->get('DbAdapter');
-                return new Admin\Service\Auth($dbAdapter);
+                return new \Admin\Service\Auth($dbAdapter);
             },
             'Cache' => function($sm) {
                 //$config = include __DIR__ . '/../../../config/application.config.php';
@@ -76,6 +79,39 @@ return array(
 
                 return $cache;
             },
+            'Doctrine\ORM\EntityManager' => function($sm) {
+                $config = $sm->get('Configuration');
+
+                $doctrineConfig = new \Doctrine\ORM\Configuration();
+                $cache = new $config['doctrine']['driver']['cache'];
+                $doctrineConfig->setQueryCacheImpl($cache);
+                $doctrineConfig->setProxyDir('/tmp');
+                $doctrineConfig->setProxyNamespace('EntityProxy');
+                $doctrineConfig->setAutoGenerateProxyClasses(true);
+
+                $driver = new \Doctrine\ORM\Mapping\Driver\AnnotationDriver(
+                                new \Doctrine\Common\Annotations\AnnotationReader(),
+                                array($config['doctrine']['driver']['paths'])
+                );
+                $doctrineConfig->setMetadataDriverImpl($driver);
+                $doctrineConfig->setMetadataCacheImpl($cache);
+                \Doctrine\Common\Annotations\AnnotationRegistry::registerFile(
+                        getenv('PROJECT_ROOT') . '/vendor/doctrine/orm/lib/Doctrine/ORM/Mapping/Driver/DoctrineAnnotations.php'
+                );
+                $em = \Doctrine\ORM\EntityManager::create(
+                                $config['doctrine']['connection'], $doctrineConfig
+                );
+                return $em;
+            },
+            'EntityManager' => function ($sm) {
+                return $sm->get('Doctrine\ORM\EntityManager');
+            },
         ),
     ),
+    'doctrine' => array(
+        'driver' => array(
+            'cache' => 'Doctrine\Common\Cache\ArrayCache',
+            'paths' => array(__DIR__ . '/../src/' . __NAMESPACE__ . '/Model')
+        ),
+    )
 );

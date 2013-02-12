@@ -12,6 +12,14 @@
  * file.
  */
 return array(
+    'doctrine' => array(
+        'connection' => array(
+            'driver' => 'pdo_mysql',
+            'host' => 'localhost',
+            'port' => '3306',
+            'dbname' => 'zf2napratica'
+        ),
+    ),
     'service_manager' => array(
         'factories' => array(
             'Zend\Db\Adapter\Adapter' => 'Zend\Db\Adapter\AdapterServiceFactory',
@@ -39,6 +47,9 @@ return array(
             'Admin\Controller\Auth.index',
             'Admin\Controller\Auth.login',
             'Admin\Controller\Auth.logout',
+            'Admin\Controller\User.index',
+            'Admin\Controller\User.save',
+            'Admin\Controller\User.delete',
         ),
         'privilege' => array(
             'visitante' => array(
@@ -59,6 +70,9 @@ return array(
             'admin' => array(
                 'allow' => array(
                     'Admin\Controller\Index.delete',
+                    'Admin\Controller\User.index',
+                    'Admin\Controller\User.save',
+                    'Admin\Controller\User.delete',
                 ),
             ),
         ),

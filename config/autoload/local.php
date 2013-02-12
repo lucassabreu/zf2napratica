@@ -16,4 +16,10 @@ return array(
         'username' => 'zend',
         'password' => 'zend',
     ),
+    'doctrine' => array(
+        'connection' => array(
+            'user' => 'zend',
+            'password' => 'zend',
+        ),
+    ),
 );

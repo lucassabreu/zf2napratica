@@ -11,6 +11,17 @@ use Zend\InputFilter\InputFilterInterface;
  */
 class UserTest extends ModelTestCase {
 
+    /**
+     * EntityManager
+     * @var Doctrine\ORM\EntityManager
+     */
+    private $em;
+
+    public function setup() {
+        parent::setup();
+        $this->em = $this->serviceManager->get('Doctrine\ORM\EntityManager');
+    }
+
     public function testGetInputFilter() {
         $user = new User();
         $if = $user->getInputFilter();
@@ -79,41 +90,39 @@ class UserTest extends ModelTestCase {
         $user->name = 'teste';
         $user->username = '';
 
-        $saved = $this->getTable('Admin\Model\user')->save($user);
+        $this->em->persist($user);
+        $this->em->flush();
     }
 
     public function testUpdate() {
-        $tableGateway = $this->getTable('Admin\Model\User');
         $user = $this->addUser();
 
         $id = $user->id;
 
         $this->assertEquals(1, $id);
 
-        $user = $tableGateway->get($id);
+        $user = $this->em->find('Admin\Model\User', $id);
         $this->assertEquals('Steve Jobs', $user->name);
 
         $user->name = 'Bill <br>Gates';
-        $updated = $tableGateway->save($user);
+        $this->em->persist($user);
+        $this->em->flush();
 
-        $user = $tableGateway->get($id);
+        $user = $this->em->find('Admin\Model\User', $id);
         $this->assertEquals('Bill Gates', $user->name);
     }
 
-    /**
-     * @expectedException Core\Model\EntityException
-     * @expectedExceptionMessage Could not find row 1
-     */
     public function testDelete() {
-        $tableGateway = $this->getTable('Admin\Model\User');
         $user = $this->addUser();
 
         $id = $user->id;
 
-        $deleted = $tableGateway->delete($id);
-        $this->assertEquals(1, $deleted); //numero de linhas excluidas
+        $user = $this->em->find('Admin\Model\User', $id);
+        $this->em->remove($user);
+        $this->em->flush();
 
-        $user = $tableGateway->get($id);
+        $user = $this->em->find('Admin\Model\User', $id);
+        $this->assertNull($user);
     }
 
     private function addUser() {
@@ -124,8 +133,10 @@ class UserTest extends ModelTestCase {
         $user->valid = 1;
         $user->role = 'admin';
 
-        $saved = $this->getTable('Admin\Model\User')->save($user);
-        return $saved;
+        $this->em->persist($user);
+        $this->em->flush();
+
+        return $user;
     }
 
 }

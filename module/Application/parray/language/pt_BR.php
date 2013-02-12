@@ -10,5 +10,6 @@ return array(
     'isEmpty' => 'Valor obrigatório, não pode ser nulo.',
     'stringLengthTooShort' => "A entrada é menor que %min% caracteres",
     'stringLengthTooLong' => "A entrada é maior que %max% caracteres",
+    'Users' => 'Usuários',
 );
 ?>
